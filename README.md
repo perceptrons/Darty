@@ -1,0 +1,2 @@
+# Darty
+Automated dartboard scoring
