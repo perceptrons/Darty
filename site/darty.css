@@ -23,7 +23,7 @@ html, body {
 }
 
 .poly-selected {
-  fill: blue; 
+  fill: blue;
 }
 
 .poly:hover.poly-selected {

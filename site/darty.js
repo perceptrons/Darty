@@ -7,9 +7,10 @@ $(document).ready(function() {
   var svgNS = document.getElementsByTagName("svg")[0].namespaceURI;
   populateSVG(coordsList, map, svgNS);
   zeroFillRegionData();
+
   // Setup the game
   $('.start-btn').click(function() {
-    $('.game-board').removeClass('hidden');
+    $('.game-board-setup').removeClass('hidden');
     $('.start-btn').addClass('hidden');
   });
 
@@ -33,6 +34,9 @@ $(document).ready(function() {
     }
     var regionName = $('.poly-selected').attr("name");
     var regionPoints = $('.region-points-input').val();
+    $("[name='" + regionName + "']").attr("value", regionPoints);
+    $('[name="hover-region-value"]').empty();
+    $('[name="hover-region-value"]').append($(".poly-selected").attr("value"));
     if (regionPoints == "" || isNaN(regionPoints) == true) {
       alert("Please enter a number for this region!");
     } else {
@@ -40,22 +44,47 @@ $(document).ready(function() {
       function(result) {
         console.log(regionPoints + " written to region_data.json!");
       });
+      $('.poly-selected').addClass('poly-set');
+      checkGameReady();
     }
   });
 
   // Display point value of currently hovered-on poly
   $('.poly').hover(function() {
-    $('[name="hover-region-value"]').text += $(this).attr("name");
-  }, function() {
-    $('[name="hover-region-value"]').text += 'N/A';
+      $('[name="hover-region-value"]').empty();
+      $('[name="hover-region-value"]').append($(this).attr("value"));
+  });
+
+  // PLAY GAME
+  var player_1_score = 0;
+  var player_2_score = 0;
+  $('[name="play-game-btn"]').click(function() {
+    $(".game-board-setup").addClass("hidden");
+    $('[name="player-2-div"]').addClass("hidden");
+    $(".game-board-active").removeClass("hidden");
+  });
+
+  // Play/pause functionality - make sure to write to file!
+  var scoreMonitoring = "True";
+  $('[name="play-btn"]').click(function() {
+    $('[name="pause-btn"]').removeClass('hidden');
+    $('[name="play-btn"]').addClass('hidden');
+    scoreMonitoring = "False";
+    $.post('scoreMonitoring.php', {scoreMonitoring: scoreMonitoring}, function(result) {
+      console.log("score monitoring: " + scoreMonitoring);
+    });
+  });
+  $('[name="pause-btn"]').click(function() {
+    $('[name="play-btn"]').removeClass('hidden');
+    $('[name="pause-btn"]').addClass('hidden');
+    scoreMonitoring = "True";
+    $.post('scoreMonitoring.php', {scoreMonitoring: scoreMonitoring}, function(result) {
+      console.log("score monitoring: " + scoreMonitoring);
+    });
   });
 });
 
-// Description: Takes a list of coordinates for each shape and appends to the
-// object appendTo.
-// Inputs: coordsList - list of x and y polygon coordinates for a shape
-//         appendTo - id of html object to append shapes to
-// Output: appends all coordsList shapes to appendTo object
+// create the svg from a list of coordinates
 function populateSVG(coordsList, id, svgNS) {
   len = coordsList.length;
   for (var i = 0; i < len; i++) {
@@ -63,6 +92,7 @@ function populateSVG(coordsList, id, svgNS) {
     shapeNode.setAttribute("name", "polygon_" + i);
     shapeNode.setAttribute("class", "poly poly-unset");
     shapeNode.setAttribute("points", coordsList[i]);
+    shapeNode.setAttribute("value", "0");
     document.getElementById(id).appendChild(shapeNode);
   }
 }
@@ -78,13 +108,6 @@ function createSVG(uri, width, height) {
 // create new region_data.json file
 // 0 initialize all region_data.json poly's
 function zeroFillRegionData() {
-  // $.ajax({
-  //   url: '/region_data.json',
-  //   type: 'head',
-  //   error: function() {
-  // $.post("check_file_exists.php", function(result) {
-  //   console.log("region_data.json file written");
-  // });
   polys = $('.poly');
   poly_names = []; len = polys.length; zeros = [];
   for (var i = 0; i < len; i++) {
@@ -93,12 +116,12 @@ function zeroFillRegionData() {
   }
   $.post('zeroFillRegionData.php', {regionNames: poly_names, regionPoints: zeros},
   function(result) {
-    console.log(result); 
     console.log("Zeros written to region_data.json!");
   });
-    // },
-    // success: function() {
-    //   console.log("region_data.json already exists");
-    // }
-  // });
+}
+
+// if all poly's values are set, let player start game!
+function checkGameReady() {
+  if ($("polygon").length == $(".poly-set").length)
+    $('[name="play-game-btn"]').removeClass("hidden");
 }

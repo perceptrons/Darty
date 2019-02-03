@@ -21,7 +21,7 @@
         <button class="standard-btn start-btn">Start New Game</button>
       </div>
 
-      <div class="hidden game-board">
+      <div class="hidden game-board game-board-setup">
         <div class="row justify-content-center">
           <h4 class="text-white">Click on a region to <br />set it's point value!</h4>
         </div>
@@ -37,7 +37,29 @@
           </form>
         </div>
         <div class="row justify-content-center">
-          <p class="text-white" name="hover-region-value">hello: </p>
+          <p class="text-white" style="display:inline; padding-left:5px">Points:</p>
+          <p class="text-white" name="hover-region-value"></p>
+        </div>
+        <div class="row justify-content-center">
+          <button name="play-game-btn" class="standard-btn hidden">Play Game</button>
+        </div>
+      </div>
+
+      <div class="hidden game-board game-board-active">
+        <div class="row justify-content-center" name="player-1-div">
+          <h2 class="text-white" style="display:inline; padding-left:5px">Player 1 Score:</h2>
+          <h2 class="text-white" name="player-1-score"></h2>
+        </div>
+        <div class="row justify-content-center" name="player-2-div">
+          <h2 class="text-white" style="display:inline; padding-left:5px">Player 2 Score:</h2>
+          <h2 class="text-white" name="player-2-score"></h2>
+        </div>
+
+        <div class="py-4">
+          <div class="row">
+            <button class="standard-btn" name="play-btn">Play</button>
+            <button class="standard-btn hidden" name="pause-btn">Pause</button>
+          </div>
         </div>
       </div>
   </body>
