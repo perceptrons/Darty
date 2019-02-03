@@ -3,10 +3,13 @@ html, body {
 }
 
 .poly {
-  fill:green;
   stroke:black;
   stroke-width:5;
   transition: 0.2s;
+}
+
+.poly-unset {
+  fill:white;
 }
 
 .poly:hover {
@@ -15,27 +18,68 @@ html, body {
   transition: 0.2s;
 }
 
-.start-btn {
+.poly-set {
+  fill: green;
+}
+
+.poly-selected {
+  fill: blue; 
+}
+
+.poly:hover.poly-selected {
+  fill: blue;
+}
+
+.standard-btn {
   color: white;
-  font-size: 25px;
   background-color: black;
-  border: 5px solid white;
-  padding: 10px;
-  padding-left: 20px;
-  padding-right: 20px;
+  border: solid white;
   cursor: pointer;
   transition: 0.3s;
 }
 
-.start-btn:hover {
+.standard-btn:hover {
   color: black;
   background-color: white;
-  border: 5px solid #111;
+  border: solid #ffd333;
+  transition: 0.3s;
+}
+
+.start-btn {
+  font-size: 25px;
+  border-width: 5px;
+  padding: 10px;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.start-btn:hover {
+  border-width: 5px;
   padding-left: 30px;
   padding-right: 30px;
-  transition: 0.3s;
+  transform: translateY(-15px);
 }
 
 .hidden {
   display: none;
+}
+
+.game-board {
+  top: 10%;
+  left: 5%;
+  position: absolute;
+}
+
+.region-points-btn {
+  font-size: 20px;
+  padding: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.region-points-btn:hover {
+  border-width: 2px;
+  padding-left: 15px;
+  padding-right: 15px;
+  transform: rotate(-5deg);
 }
