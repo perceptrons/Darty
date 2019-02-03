@@ -2,19 +2,12 @@ import numpy as np
 import os
 import sys
 import tensorflow as tf
-from collections import defaultdict
-import matplotlib
-matplotlib.use("GTK3Agg")
-import matplotlib.pyplot as plt
-print(plt.get_backend())
-print(matplotlib.get_backend())
 from PIL import Image
 
 
 sys.path.append("./models/research")
 from object_detection.utils import ops as utils_ops
 from object_detection.utils import label_map_util
-from object_detection.utils import visualization_utils as vis_util
 
 
 def load_image_into_numpy_array(image):
@@ -69,7 +62,7 @@ def run_inference_for_single_image(image, graph):
   return output_dict
 
 
-def main(image_path):
+def crop_and_save(image_path, save_path, percent_points=0.0):
   MODEL_NAME = 'ssd_mobilenet_v1_coco_2017_11_17'
   PATH_TO_FROZEN_GRAPH = MODEL_NAME + '/frozen_inference_graph.pb'
   PATH_TO_LABELS = os.path.join('.', 'models', 'research', 'object_detection', 'data', 'mscoco_label_map.pbtxt')
@@ -82,35 +75,32 @@ def main(image_path):
       od_graph_def.ParseFromString(serialized_graph)
       tf.import_graph_def(od_graph_def, name='')
 
-  category_index = label_map_util.create_category_index_from_labelmap(PATH_TO_LABELS, use_display_name=True)
+  with Image.open(image_path) as image:
 
-  PATH_TO_TEST_IMAGES_DIR = './models/research/object_detection/test_images'
-  TEST_IMAGE_PATHS = [ os.path.join(PATH_TO_TEST_IMAGES_DIR, 'image{}.jpg'.format(i)) for i in range(1, 3) ]
-  # Size, in inches, of the output images.
-  IMAGE_SIZE = (12, 8)
+    #image = Image.open(image_path)
+    image_np = load_image_into_numpy_array(image)
+    image_np_expanded = np.expand_dims(image_np, axis=0)
+    output_dict = run_inference_for_single_image(image_np, detection_graph)
 
-  image = Image.open(image_path)
-  image_np = load_image_into_numpy_array(image)
-  image_np_expanded = np.expand_dims(image_np, axis=0)
-  output_dict = run_inference_for_single_image(image_np, detection_graph)
-  vis_util.visualize_boxes_and_labels_on_image_array(
-    image_np,
-    output_dict['detection_boxes'],
-    output_dict['detection_classes'],
-    output_dict['detection_scores'],
-    category_index,
-    instance_masks=output_dict.get('detection_masks'),
-    use_normalized_coordinates=True,
-    line_thickness=8)
-  plt.figure(figsize=IMAGE_SIZE)
-  plt.imshow(image_np)
-  plt.show()
 
-  print(output_dict)
-  print(len(output_dict["detection_boxes"]))
+    best_box = output_dict["detection_boxes"][0]
+    (rawX0, rawY0, rawX1, rawY1) = best_box
+
+    rawX0 -= percent_points
+    rawY0 -= percent_points
+    rawX1 += percent_points
+    rawY1 += percent_points
+  
+    (width, height) = image.size
+    rawX0 *= width
+    rawX1 *= width
+    rawY0 *= height
+    rawY1 *= height
+
+    image.crop( (rawX0, rawY0, rawX1, rawY1) ).save(save_path)
 
 
 if __name__ == "__main__":
 	filePath = "dartboardtest_crop.png"
-	main(filePath)
+	crop_and_save(filePath, "crop_testing.jpg")
 	pass
