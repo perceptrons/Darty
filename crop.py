@@ -99,6 +99,9 @@ def crop_and_save(image_path, save_path, percent_points=0.0):
     rawY0 *= height
     rawY1 *= height
 
+    if os.path.exists(save_path):
+       os.remove(save_path)
+
     image.crop( (rawX0, rawY0, rawX1, rawY1) ).save(save_path)
 
 
