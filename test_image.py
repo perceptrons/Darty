@@ -11,7 +11,11 @@ time.sleep(0.1)
 camera.capture(rawCapture, format="bgr")
 image = rawCapture.array
 
+#imwrite
+cv.imwrite("imagey.png",image)
 #display the image on screen and wait for a keypress
-cv.imshow("Image.png", image)
-cv.waitKey(0)
+#cv.imshow("Image", image)
+#cv.waitKey(0)
+
+
 
