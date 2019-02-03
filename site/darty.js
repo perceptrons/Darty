@@ -1,22 +1,13 @@
 $(document).ready(function() {
   $.ajaxSetup({cache: false});
-
-  // coordsList = ['100,100 100,400 400,400 400,100 100,100', '200,10 250,190 160,210',
-  //             '0,0 0,50 50,50 50,0 0,0'];
-
   $.getJSON('regions.json', function(coordsList) {
       createSVG(window.location.href, 100, 100);
-    // console.log("asdf" + svgNS);
     var svgNS = document.getElementsByTagName("svg")[0].namespaceURI;
     map = "dartboard";
     var len = Object.keys(coordsList).length;
-    // coordsList = ['100,100 100,400 400,400 400,100 100,100', '200,10 250,190 160,210',
-    //             '0,0 0,50 50,50 50,0 0,0'];
     coordsList.length = len;
     coordsList = Array.prototype.slice.call(coordsList);
     populateSVG(coordsList, map, svgNS);
-
-    // populateSVG(coordsList, map, svgNS);
     zeroFillRegionData();
 
     // Setup the game
@@ -32,7 +23,7 @@ $(document).ready(function() {
       $('.poly').removeClass('poly-selected');
       $('.poly').addClass('poly-unset');
       $this.addClass('poly-selected');
-      $this.removeClass('poly-unset');
+      // $this.removeClass('poly-unset');
       // TODO: make poly-set z-index lower priority than selected index but don't remove it
     });
 
@@ -93,6 +84,16 @@ $(document).ready(function() {
         console.log("score monitoring: " + scoreMonitoring);
       });
     });
+
+    // RESTART Game
+    $('[name="restart-btn"]').click(function() {
+      $(".game-board-setup").removeClass("hidden");
+      $('[name="player-2-div"]').removeClass("hidden");
+      $(".game-board-active").addClass("hidden");
+      $('.poly').removeClass('poly-set');
+      $('.poly').removeClass('poly-selected');
+      $('.poly').attr("value", "0"); 
+    });
   });
 });
 
@@ -132,6 +133,11 @@ function zeroFillRegionData() {
   function(result) {
     console.log("Zeros written to region_data.json!");
   });
+}
+
+// zero fill dynamic
+function zeroFillDynamic() {
+  $('.poly').attr("value", "0");
 }
 
 // if all poly's values are set, let player start game!

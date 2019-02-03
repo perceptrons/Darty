@@ -15,7 +15,7 @@
         <h3 class="text-white">Dartboard</h3>
       </div>
       <div class="row justify-content-center">
-        <svg id="dartboard" width="1000" height="1000"></svg>
+        <svg id="dartboard" width="1000" height="1000" style="left:17%;position:absolute;"></svg>
       </div>
       <div class="row justify-content-center">
         <button class="standard-btn start-btn">Start New Game</button>
@@ -23,7 +23,7 @@
 
       <div class="hidden game-board game-board-setup">
         <div class="row justify-content-center">
-          <h4 class="text-white">Click on a region to <br />set it's point value!</h4>
+          <h2 class="text-white">Click on a region to <br />set it's point value!</h2>
         </div>
         <div class="row justify-content-center">
           <form class="" method="post">
@@ -37,11 +37,11 @@
           </form>
         </div>
         <div class="row justify-content-center">
-          <p class="text-white" style="display:inline; padding-left:5px">Points:</p>
-          <p class="text-white" name="hover-region-value"></p>
+          <p class="text-white" style="display:inline; padding-left:5px; font-size:30px;">Points:</p>
+          <p class="text-white" name="hover-region-value" style="font-size:30px;"></p>
         </div>
         <div class="row justify-content-center">
-          <button name="play-game-btn" class="standard-btn hidden">Play Game</button>
+          <button name="play-game-btn" class="standard-btn play-btn">Play Game</button>
         </div>
       </div>
 
@@ -57,11 +57,16 @@
 
         <div class="py-4">
           <div class="row">
-            <button class="standard-btn" name="play-btn">Play</button>
-            <button class="standard-btn hidden" name="pause-btn">Pause</button>
+            <button class="standard-btn play-btn" name="play-btn">Play</button>
+            <button class="standard-btn play-btn hidden" name="pause-btn">Pause</button>
+          </div>
+        </div>
+
+        <div class="py-4">
+          <div class="row">
+            <button class="standard-btn play-btn" name="restart-btn">Restart</button>
           </div>
         </div>
       </div>
-      <div id="regions"></div>
   </body>
 </html>
