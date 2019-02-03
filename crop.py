@@ -65,7 +65,10 @@ def run_inference_for_single_image(image, graph):
 def crop_and_save(image_path, save_path, percent_points=0.0):
   MODEL_NAME = 'ssd_mobilenet_v1_coco_2017_11_17'
   PATH_TO_FROZEN_GRAPH = MODEL_NAME + '/frozen_inference_graph.pb'
+
+
   PATH_TO_LABELS = os.path.join('.', 'models', 'research', 'object_detection', 'data', 'mscoco_label_map.pbtxt')
+  category_index = label_map_util.create_category_index_from_labelmap(PATH_TO_LABELS, use_display_name=True)
 
   detection_graph = tf.Graph()
   with detection_graph.as_default():
@@ -74,16 +77,15 @@ def crop_and_save(image_path, save_path, percent_points=0.0):
       serialized_graph = fid.read()
       od_graph_def.ParseFromString(serialized_graph)
       tf.import_graph_def(od_graph_def, name='')
+  
 
   with Image.open(image_path) as image:
-
-    #image = Image.open(image_path)
     image_np = load_image_into_numpy_array(image)
     image_np_expanded = np.expand_dims(image_np, axis=0)
     output_dict = run_inference_for_single_image(image_np, detection_graph)
 
-
     best_box = output_dict["detection_boxes"][0]
+
     (rawX0, rawY0, rawX1, rawY1) = best_box
 
     rawX0 -= percent_points
@@ -97,10 +99,58 @@ def crop_and_save(image_path, save_path, percent_points=0.0):
     rawY0 *= height
     rawY1 *= height
 
+    if os.path.exists(save_path):
+       os.remove(save_path)
+
     image.crop( (rawX0, rawY0, rawX1, rawY1) ).save(save_path)
 
 
+def dart_coords(image_path):
+  """
+  Returns the coordinates of a dart as an ordered pair
+  """
+
+  MODEL_NAME = 'ssd_mobilenet_v1_coco_2017_11_17'
+  PATH_TO_FROZEN_GRAPH = MODEL_NAME + '/frozen_inference_graph.pb'
+
+
+  PATH_TO_LABELS = os.path.join('.', 'models', 'research', 'object_detection', 'data', 'mscoco_label_map.pbtxt')
+  category_index = label_map_util.create_category_index_from_labelmap(PATH_TO_LABELS, use_display_name=True)
+
+  detection_graph = tf.Graph()
+  with detection_graph.as_default():
+    od_graph_def = tf.GraphDef()
+    with tf.gfile.GFile(PATH_TO_FROZEN_GRAPH, 'rb') as fid:
+      serialized_graph = fid.read()
+      od_graph_def.ParseFromString(serialized_graph)
+      tf.import_graph_def(od_graph_def, name='')
+
+
+  with Image.open(image_path) as image:
+    image_np = load_image_into_numpy_array(image)
+    image_np_expanded = np.expand_dims(image_np, axis=0)
+    output_dict = run_inference_for_single_image(image_np, detection_graph)
+    
+    for (i, identifier) in enumerate( output_dict["detection_classes"] ):
+      objectClass = category_index[identifier]["name"]
+      if objectClass == "tie":
+        box = output_dict["detection_boxes"][i]
+        best_box = box
+        break
+    
+
+    (rawX0, rawY0, rawX1, rawY1) = best_box
+    (width, height) = image.size
+    rawX0 *= width
+    rawX1 *= width
+    rawY0 *= height
+    rawY1 *= height
+
+    return ( int( (rawX0+rawX1)//2 ), int( (rawY0+rawY1)//2 ) )
+
+
+
 if __name__ == "__main__":
-	filePath = "dartboardtest_crop.png"
+	filePath = "image3darts.png"
 	crop_and_save(filePath, "crop_testing.jpg")
-	pass
+	print(dart_coords(filePath))
