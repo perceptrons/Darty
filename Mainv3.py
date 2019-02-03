@@ -25,7 +25,7 @@ print('Captured Template Image. Yay!')
 
 crop_and_save('ImageStart.jpg', 'ImageStartCropped.jpg')
 
-contoursfunc('ImageStartCropped.jpg') #updates regions.json
+#contoursfunc('ImageStartCropped.jpg') #updates regions.json
 
 ScoreMonitoring = True
 data = {
