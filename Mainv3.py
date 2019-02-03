@@ -6,19 +6,26 @@ import json
 from time import sleep
 import subprocess
 from crop import *
+from contoursfunc import *
 
 import os
 
-print('welcome')
+
+#subprocess.run(["python3", "-m", "http.server"])
+
+print('Creating Template Basis - Pre-Game')
 
 #print(os.environ)
 #print(os.environ["PATH"])
 
-subprocess.run(["raspistill", "-o","ImageStart.jpg"])
+subprocess.run(["raspistill", "-o","ImageStart.jpg"],shell=False)
+
 print('Captured Template Image. Yay!')
 #function where regions are sent to gui
 
 crop_and_save('ImageStart.jpg', 'ImageStartCropped.jpg')
+
+contoursfunc('ImageStartCropped.jpg') #updates regions.json
 
 ScoreMonitoring = True
 data = {
