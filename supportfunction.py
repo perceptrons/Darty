@@ -17,7 +17,6 @@ def PiCamCapture(name):
     #display the image on screen and wait for a keypress
     #cv.imshow("Image", image)
     #cv.waitKey(0)
-
     return 0
 
 def add_num(x,y):

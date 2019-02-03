@@ -3,16 +3,22 @@ import numpy as np
 import time
 from matplotlib import pyplot as plt
 import json
-
-from supportfunction import *
+from time import sleep
+import subprocess
 from crop import *
 
-PiCamCapture('ImageStart.png')
+import os
 
+print('welcome')
+
+#print(os.environ)
+#print(os.environ["PATH"])
+
+subprocess.run(["raspistill", "-o","ImageStart.jpg"])
 print('Captured Template Image. Yay!')
 #function where regions are sent to gui
 
-crop_and_save('ImageStart.png', 'ImageStartCropped.png')
+crop_and_save('ImageStart.jpg', 'ImageStartCropped.jpg')
 
 ScoreMonitoring = True
 data = {
@@ -23,11 +29,13 @@ with open("globalfile.json", "w") as write_file:
     json.dump(data, write_file)
 
 
-PiCamCapture('CurrentPic1.png')
+subprocess.run(["raspistill", "-o","CurrentPic.jpg"])
+crop_and_save('CurrentPic.jpg', 'CurrentPicCropped.jpg')
+print("first current pic done")
 
 count = 0
 while True:
-    time.sleep(1) #pause loop for 5 seconds
+    time.sleep(2) #pause loop for 5 seconds
     #updates picture if we are monitoring
     with open("globalfile.json", "r") as read_file:
         data = json.load(read_file)
@@ -35,8 +43,8 @@ while True:
     print(ScoreMonitoring)
 
     if ScoreMonitoring== True:
-        PiCamCapture('CurrentPic.png')
-        crop_and_save('CurrentPic.png', 'CurrentPicCropped.png')
+        subprocess.run(["raspistill", "-o","CurrentPic.jpg"])
+        crop_and_save('CurrentPic.jpg', 'CurrentPicCropped.jpg')
         count = count +1
         print("monitoring")
 
@@ -49,7 +57,3 @@ while True:
         }
         with open("globalfile.json", "w") as write_file:
             json.dump(data, write_file)
-
-
-
-
