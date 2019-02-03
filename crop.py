@@ -143,7 +143,7 @@ def dart_coords(image_path):
     rawY0 *= height
     rawY1 *= height
 
-    return ( (rawX0+rawX1)/2, (rawY0+rawY1)/2 )
+    return ( int( (rawX0+rawX1)//2 ), int( (rawY0+rawY1)//2 ) )
 
 
 
