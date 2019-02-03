@@ -6,7 +6,7 @@ $(document).ready(function() {
   createSVG(window.location.href, 100, 100);
   var svgNS = document.getElementsByTagName("svg")[0].namespaceURI;
   populateSVG(coordsList, map, svgNS);
-
+  zeroFillRegionData();
   // Setup the game
   $('.start-btn').click(function() {
     $('.game-board').removeClass('hidden');
@@ -38,9 +38,16 @@ $(document).ready(function() {
     } else {
       $.post('writeRegionPointsToFile.php', {regionName: regionName, regionPoints: regionPoints},
       function(result) {
-        console.log(regionPoints + " written to region_data.txt!");
+        console.log(regionPoints + " written to region_data.json!");
       });
     }
+  });
+
+  // Display point value of currently hovered-on poly
+  $('.poly').hover(function() {
+    $('[name="hover-region-value"]').text += $(this).attr("name");
+  }, function() {
+    $('[name="hover-region-value"]').text += 'N/A';
   });
 });
 
@@ -66,4 +73,32 @@ function createSVG(uri, width, height) {
   svg.setAttribute("id", "dartboard");
   svg.setAttribute("width", width);
   svg.setAttribute("height", height);
+}
+
+// create new region_data.json file
+// 0 initialize all region_data.json poly's
+function zeroFillRegionData() {
+  // $.ajax({
+  //   url: '/region_data.json',
+  //   type: 'head',
+  //   error: function() {
+  // $.post("check_file_exists.php", function(result) {
+  //   console.log("region_data.json file written");
+  // });
+  polys = $('.poly');
+  poly_names = []; len = polys.length; zeros = [];
+  for (var i = 0; i < len; i++) {
+    poly_names.push($(polys[i]).attr("name"));
+    zeros.push("0");
+  }
+  $.post('zeroFillRegionData.php', {regionNames: poly_names, regionPoints: zeros},
+  function(result) {
+    console.log(result); 
+    console.log("Zeros written to region_data.json!");
+  });
+    // },
+    // success: function() {
+    //   console.log("region_data.json already exists");
+    // }
+  // });
 }
