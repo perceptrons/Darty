@@ -1,0 +1,41 @@
+html, body {
+  background-color: #111;
+}
+
+.poly {
+  fill:green;
+  stroke:black;
+  stroke-width:5;
+  transition: 0.2s;
+}
+
+.poly:hover {
+  fill: red;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.start-btn {
+  color: white;
+  font-size: 25px;
+  background-color: black;
+  border: 5px solid white;
+  padding: 10px;
+  padding-left: 20px;
+  padding-right: 20px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.start-btn:hover {
+  color: black;
+  background-color: white;
+  border: 5px solid #111;
+  padding-left: 30px;
+  padding-right: 30px;
+  transition: 0.3s;
+}
+
+.hidden {
+  display: none;
+}
