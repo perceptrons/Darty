@@ -1,6 +1,10 @@
-$(document).ready(function() {
+// $(document).ready(function() {
   $.ajaxSetup({cache: false});
-  $.getJSON('regions.json', function(coordsList) {
+  $(document).on('change','.selectClass',function(){
+
+  var regionsFile = $('.selectClass').val();
+  console.log(regionsFile);
+  $.getJSON(regionsFile, function(coordsList) {
       createSVG(window.location.href, 100, 100);
     var svgNS = document.getElementsByTagName("svg")[0].namespaceURI;
     map = "dartboard";
@@ -92,10 +96,13 @@ $(document).ready(function() {
       $(".game-board-active").addClass("hidden");
       $('.poly').removeClass('poly-set');
       $('.poly').removeClass('poly-selected');
-      $('.poly').attr("value", "0"); 
+      $('.poly').attr("value", "0");
     });
+
+    // import json data or use default
   });
-});
+     });
+// });
 
 
 // create the svg from a list of coordinates
@@ -146,10 +153,10 @@ function checkGameReady() {
     $('[name="play-game-btn"]').removeClass("hidden");
 }
 
-function getRegionsData(coordsList, map, svgNS) {
-  this.coordsList = null;
-  $.getJSON('regions.json', function(json) {
-    this.coordsList = json;
-    populateSVG(coordsList, map, svgNS);
-  }.bind(this));
-}
+// function getRegionsData(coordsList, map, svgNS) {
+//   this.coordsList = null;
+//   $.getJSON('regions.json', function(json) {
+//     this.coordsList = json;
+//     populateSVG(coordsList, map, svgNS);
+//   }.bind(this));
+// }

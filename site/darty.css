@@ -100,3 +100,18 @@ html, body {
   padding-right: 15px;
   transform: rotate(-5deg);
 }
+
+.selectClass {
+  color: white;
+  background-color: black;
+  border: solid white;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.selectClass:hover {
+  /* border-width: 5px;
+  padding-left: 30px;
+  padding-right: 30px; */
+  /* transform: translateY(15px); */
+}
